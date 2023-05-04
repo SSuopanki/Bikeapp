@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const Header = () => {
   return (
     <>
-      <Title>Bike App</Title>
+      <Title>Helsinki city bike app</Title>
       <HeaderDiv>
         <Heading to="Journeys">Journeys</Heading>
         <Heading to="Stations">Stations</Heading>
