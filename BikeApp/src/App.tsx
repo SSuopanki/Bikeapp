@@ -1,10 +1,21 @@
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Header } from "./Components/Header";
+import { Journeys } from "./Views/Journeys";
+import { Stations } from "./Views/Stations";
 
-function App() {
-
+const App = () => {
   return (
-    <div>
-    </div>
-  )
-}
+    <Router>
+      <Header />
 
-export default App
+      <Routes>
+        <Route path="/Journeys" element={<Journeys />} />
+        <Route path="/Stations" element={<Stations />} />
+        <Route path="/" element={<Journeys />} />
+        <Route path="/*" element={<Journeys />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
