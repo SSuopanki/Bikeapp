@@ -1,16 +1,16 @@
-export type TJourneys = {
-  Id: number;
-  Departure: Date;
-  Return: Date;
-  DepartureStationId: number;
-  DepartureStationName: string;
-  ReturnStationId: number;
-  ReturnStationName: string;
-  Distance: number;
-  Duration: number;
-};
+export interface TJourneys {
+  journeyId: number;
+  departureDate: Date;
+  returnDate: Date;
+  departureStationId: number;
+  departureStationName: string;
+  returnStationId: number;
+  returnStationName: string;
+  distance: number;
+  duration: number;
+}
 
-export type TStations = {
+export interface TStations {
   Id: number;
   Nimi: string;
   Namn: string;
@@ -23,4 +23,4 @@ export type TStations = {
   Kapasiteet: number;
   CoordinateX: number;
   CoordinateY: number;
-};
+}

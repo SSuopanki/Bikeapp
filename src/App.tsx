@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Header } from "./Components/Header";
-import { Journeys } from "./Views/Journeys";
-import { Stations } from "./Views/Stations";
+import { JourneysView } from "./Views/JourneysView";
+import { StationsView } from "./Views/StationsView";
 
 const App = () => {
   return (
@@ -9,10 +9,10 @@ const App = () => {
       <Header />
 
       <Routes>
-        <Route path="/Journeys" element={<Journeys />} />
-        <Route path="/Stations" element={<Stations />} />
-        <Route path="/" element={<Journeys />} />
-        <Route path="/*" element={<Journeys />} />
+        <Route path="/Journeys" element={<JourneysView />} />
+        <Route path="/Stations" element={<StationsView />} />
+        <Route path="/" element={<JourneysView />} />
+        <Route path="/*" element={<JourneysView />} />
       </Routes>
     </Router>
   );
