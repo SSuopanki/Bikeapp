@@ -11,16 +11,16 @@ export interface TJourneys {
 }
 
 export interface TStations {
-  Id: number;
-  Nimi: string;
-  Namn: string;
-  Name: string;
-  Osoite: string;
-  Adress: string;
-  Kaupunki: string;
-  Stad: string;
-  Operaattor: string;
-  Kapasiteet: number;
-  CoordinateX: number;
-  CoordinateY: number;
+  id: number;
+  nimi: string;
+  namn: string;
+  name: string;
+  osoite: string;
+  adress: string;
+  kaupunki: string;
+  stad: string;
+  operaattor: string;
+  kapasiteet: number;
+  coordinateX: number;
+  coordinateY: number;
 }

@@ -19,16 +19,16 @@ export const StationsView = () => {
       <div>
         {data.map((value) => {
           return (
-            <div key={value.Id}>
-              <div>{value.Adress}</div>
-              <div>{value.Osoite}</div>
-              <div>{value.Kapasiteet}</div>
-              <div>{value.Kaupunki}</div>
-              <div>{value.Stad}</div>
-              <div>{value.Name}</div>
-              <div>{value.Namn}</div>
-              <div>{value.Nimi}</div>
-              <div>{value.Operaattor}</div>
+            <div key={value.id}>
+              <div>{value.adress}</div>
+              <div>{value.osoite}</div>
+              <div>{value.kapasiteet}</div>
+              <div>{value.kaupunki}</div>
+              <div>{value.stad}</div>
+              <div>{value.name}</div>
+              <div>{value.namn}</div>
+              <div>{value.nimi}</div>
+              <div>{value.operaattor}</div>
             </div>
           );
         })}
