@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { TJourneys } from "../types";
+import { TJourney } from "../types";
 
 export const useJourneysQuery = () =>
-  useQuery<Array<TJourneys>>({
+  useQuery<Array<TJourney>>({
     queryKey: ["journeys"],
     queryFn: async () =>
       await axios

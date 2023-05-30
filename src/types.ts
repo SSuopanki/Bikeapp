@@ -1,5 +1,29 @@
-export interface TJourneys {
-  journeyId: number;
+export interface TJourney {
+  journeyId: string;
+  departureDate: Date;
+  returnDate: Date;
+  departureStationId: number;
+  departureStationName: string;
+  returnStationId: number;
+  returnStationName: string;
+  distance: number;
+  duration: number;
+}
+
+export interface TJourneysWithTime {
+  startTime: string;
+  endTime: string;
+  departureDate: string;
+  returnDate: string;
+  departureStationId: number;
+  departureStationName: string;
+  returnStationId: number;
+  returnStationName: string;
+  distance: number;
+  duration: number;
+}
+
+export interface TPostJourneys {
   departureDate: Date;
   returnDate: Date;
   departureStationId: number;

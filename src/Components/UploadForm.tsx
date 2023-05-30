@@ -1,35 +1,40 @@
 import { Field, Form, Formik, useFormikContext } from "formik";
-import { TStations } from "../types";
-import { useState } from "react";
+import { TJourneysWithTime, TPostJourneys, TStations } from "../types";
+import styled from "@emotion/styled";
+import { useJourneyMutation } from "../Hooks/useJourneyMutation";
 
 type TValue = Record<string, number | string>;
 type TStationArray = Array<TStations>;
 
 interface TFormProps {
   data: TStationArray;
+  setFormOpen: Function;
 }
 
 export const UploadForm = (Props: TFormProps) => {
-  const { data } = Props;
+  const { data, setFormOpen } = Props;
+  const { mutate } = useJourneyMutation();
 
   const currentDate = new Date().toISOString().split("T")[0];
   const currentTime = new Date().toTimeString().substring(0, 5);
 
-  const initialValues = {
+  const initialValues: TJourneysWithTime = {
+    duration: 0,
     departureDate: currentDate,
     startTime: currentTime,
     returnDate: currentDate,
     endTime: currentTime,
-    departureStationName: "",
+    departureStationName: "Kaivopuisto",
     departureStationId: 0,
-    returnStationName: "",
+    returnStationName: "Kaivopuisto",
     returnStationId: 0,
     distance: 0,
   };
 
   //TODO: Possibly better way to do this. Needs research!
-  const calculateDuration = (value: TValue) => {
+  const calculateDuration = (value: TJourneysWithTime) => {
     const { startTime, endTime, departureDate, returnDate } = value;
+
     //check if dates are equal. Calculate second difference between end and start time
     if (departureDate === returnDate) {
       const start = startTime.toString();
@@ -62,70 +67,145 @@ export const UploadForm = (Props: TFormProps) => {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={async (values: TValue) => {
-        calculateDuration(values);
-      }}
-    >
-      {({ setFieldValue }) => (
-        <Form>
-          <label htmlFor="departureDate"> Departure Date </label>
-          <Field type="date" id="departureDate" name="departureDate" />
+    <FormContainer>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={async (values: TJourneysWithTime) => {
+          calculateDuration(values);
 
-          <label htmlFor="startTime">Start Time</label>
-          <Field type="time" id="startTime" name="startTime" />
+          const newData: TPostJourneys = {
+            ...values,
+            returnDate: new Date(values.returnDate),
+            departureDate: new Date(values.departureDate),
+          };
+          console.log(newData);
 
-          <label htmlFor="returnDate">Return Date</label>
-          <Field type="date" id="returnDate" name="returnDate" />
+          mutate(newData);
+        }}
+      >
+        {({ setFieldValue }) => (
+          <StyledForm>
+            <Fielddiv>
+              <Label htmlFor="departureDate"> Departure Date </Label>
+              <Field type="date" id="departureDate" name="departureDate" />
+            </Fielddiv>
+            <Fielddiv>
+              <Label htmlFor="startTime">Start Time</Label>
+              <Field type="time" id="startTime" name="startTime" />
+            </Fielddiv>
+            <Fielddiv>
+              <Label htmlFor="returnDate">Return Date</Label>
+              <Field type="date" id="returnDate" name="returnDate" />
+            </Fielddiv>
+            <Fielddiv>
+              <Label htmlFor="endTime">End Time</Label>
+              <Field type="time" id="endTime" name="endTime" />
+            </Fielddiv>
 
-          <label htmlFor="endTime">End Time</label>
-          <Field type="time" id="endTime" name="endTime" />
+            <Fielddiv>
+              <Label htmlFor="departureStationName">Departure Station</Label>
+              <Field
+                as="select"
+                id="departureStationName"
+                onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                  const currentValue = event.currentTarget.value;
+                  setFieldValue("departureStationName", currentValue);
+                  const id = data.find(
+                    (station) => station.name === currentValue
+                  )?.id;
+                  setFieldValue("departureStationId", id);
+                }}
+                name="departureStationName"
+              >
+                {data.map((value) => {
+                  return <option key={value.id}>{value.name}</option>;
+                })}
+              </Field>
+            </Fielddiv>
 
-          <label htmlFor="departureStationName">Departure Station</label>
-          <Field
-            as="select"
-            id="departureStationName"
-            onChange={(event: React.FormEvent<HTMLInputElement>) => {
-              const currentValue = event.currentTarget.value;
-              setFieldValue("departureStationName", currentValue);
-              const id = data.find(
-                (station) => station.name === currentValue
-              )?.id;
-              setFieldValue("departureStationId", id);
-            }}
-            name="departureStationName"
-          >
-            {data.map((value) => {
-              return <option key={value.id}>{value.name}</option>;
-            })}
-          </Field>
+            <Fielddiv>
+              <Label htmlFor="returnStationName">Return Station</Label>
+              <Field
+                onChange={(event: React.FormEvent<HTMLInputElement>) => {
+                  const currentValue = event.currentTarget.value;
+                  setFieldValue("returnStationName", currentValue);
+                  const id = data.find(
+                    (station) => station.name === currentValue
+                  )?.id;
+                  setFieldValue("returnStationId", id);
+                }}
+                as="select"
+                id="returnStationName"
+                name="returnStationName"
+              >
+                {data.map((value) => {
+                  return <option key={value.id}>{value.name}</option>;
+                })}
+              </Field>
+            </Fielddiv>
 
-          <label htmlFor="returnStationName">Return Station</label>
-          <Field
-            onChange={(event: React.FormEvent<HTMLInputElement>) => {
-              const currentValue = event.currentTarget.value;
-              setFieldValue("returnStationName", currentValue);
-              const id = data.find(
-                (station) => station.name === currentValue
-              )?.id;
-              setFieldValue("returnStationId", id);
-            }}
-            as="select"
-            id="returnStationName"
-            name="returnStationName"
-          >
-            {data.map((value) => {
-              return <option key={value.id}>{value.name}</option>;
-            })}
-          </Field>
-
-          <label htmlFor="distance">Distance in meters</label>
-          <Field id="distance" name="distance" placeholder="0" />
-
-          <button type="submit">Submit</button>
-        </Form>
-      )}
-    </Formik>
+            <Fielddiv>
+              <Label htmlFor="distance">Distance in meters</Label>
+              <Field id="distance" name="distance" placeholder="0" />
+            </Fielddiv>
+            <ButtonDiv>
+              <CancelButton onClick={() => setFormOpen(false)}>
+                cancel
+              </CancelButton>
+              <SubmitButton type="submit">Submit</SubmitButton>
+            </ButtonDiv>
+          </StyledForm>
+        )}
+      </Formik>
+    </FormContainer>
   );
 };
+
+const FormContainer = styled.div`
+  width: 50rem;
+  height: 20rem;
+  border: 1px solid black;
+  border-radius: 1rem;
+`;
+
+const Label = styled.label`
+  width: 10rem;
+  font-weight: bold;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+`;
+
+const Fielddiv = styled.div`
+  display: flex;
+  margin: 0.5rem;
+  display: grid;
+  grid-template-rows: 1.7rem 1.5rem;
+`;
+
+const StyledForm = styled(Form)`
+  display: grid;
+  grid-template-columns: 25rem 25rem;
+`;
+
+const SubmitButton = styled.button`
+  border-radius: 0.5rem;
+  height: 2.5rem;
+  margin-right: 1rem;
+  :hover {
+    background-color: green;
+  }
+`;
+
+const CancelButton = styled.button`
+  border-radius: 0.5rem;
+  height: 2.5rem;
+  :hover {
+    background-color: red;
+  }
+`;
+
+const ButtonDiv = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 0.5rem;
+`;
