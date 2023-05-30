@@ -1,18 +1,24 @@
 import { Field, Form, Formik, useFormikContext } from "formik";
-import { TJourneysWithTime, TPostJourneys, TStations } from "../types";
+import { TJourneysWithTime, TPostJourneys, TStation } from "../types";
 import styled from "@emotion/styled";
 import { useJourneyMutation } from "../Hooks/useJourneyMutation";
+import {
+  ButtonDiv,
+  CancelButton,
+  Label,
+  SubmitButton,
+} from "../StyledComponents";
 
 type TValue = Record<string, number | string>;
-type TStationArray = Array<TStations>;
+type TStationArray = Array<TStation>;
 
 interface TFormProps {
   data: TStationArray;
   setFormOpen: Function;
 }
 
-export const UploadForm = (Props: TFormProps) => {
-  const { data, setFormOpen } = Props;
+export const UploadJourneyForm = (props: TFormProps) => {
+  const { data, setFormOpen } = props;
   const { mutate } = useJourneyMutation();
 
   const currentDate = new Date().toISOString().split("T")[0];
@@ -61,7 +67,6 @@ export const UploadForm = (Props: TFormProps) => {
       const duration = (endDate.getTime() - startDate.getTime()) / 1000;
 
       value.duration = duration;
-      console.log("value: ", value);
       return value;
     }
   };
@@ -149,10 +154,13 @@ export const UploadForm = (Props: TFormProps) => {
               <Field id="distance" name="distance" placeholder="0" />
             </Fielddiv>
             <ButtonDiv>
-              <CancelButton onClick={() => setFormOpen(false)}>
-                cancel
-              </CancelButton>
-              <SubmitButton type="submit">Submit</SubmitButton>
+              <CancelButton
+                onClick={() => setFormOpen(false)}
+                children="cancel"
+                type="button"
+              />
+
+              <SubmitButton type="submit" children="submit" />
             </ButtonDiv>
           </StyledForm>
         )}
@@ -163,16 +171,9 @@ export const UploadForm = (Props: TFormProps) => {
 
 const FormContainer = styled.div`
   width: 50rem;
-  height: 20rem;
+  height: fit-content;
   border: 1px solid black;
   border-radius: 1rem;
-`;
-
-const Label = styled.label`
-  width: 10rem;
-  font-weight: bold;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 `;
 
 const Fielddiv = styled.div`
@@ -185,27 +186,4 @@ const Fielddiv = styled.div`
 const StyledForm = styled(Form)`
   display: grid;
   grid-template-columns: 25rem 25rem;
-`;
-
-const SubmitButton = styled.button`
-  border-radius: 0.5rem;
-  height: 2.5rem;
-  margin-right: 1rem;
-  :hover {
-    background-color: green;
-  }
-`;
-
-const CancelButton = styled.button`
-  border-radius: 0.5rem;
-  height: 2.5rem;
-  :hover {
-    background-color: red;
-  }
-`;
-
-const ButtonDiv = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  margin: 0.5rem;
 `;

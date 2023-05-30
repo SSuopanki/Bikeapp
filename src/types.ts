@@ -34,7 +34,7 @@ export interface TPostJourneys {
   duration: number;
 }
 
-export interface TStations {
+export interface TStation {
   id: number;
   nimi: string;
   namn: string;
@@ -47,4 +47,11 @@ export interface TStations {
   kapasiteet: number;
   coordinateX: number;
   coordinateY: number;
+}
+
+export interface TStationWithNums extends TStation {
+  departureNum: number;
+  returnNum: number;
+  averageDistanceStart: string;
+  averageDistanceEnd: string;
 }
