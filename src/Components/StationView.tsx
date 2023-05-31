@@ -1,5 +1,4 @@
-import styled from "@emotion/styled";
-import { TStation, TStationWithNums } from "../types";
+import { TStationWithNums } from "../types";
 
 interface TProps {
   station: TStationWithNums;
@@ -25,8 +24,6 @@ export const StationView = (props: TProps) => {
     averageDistanceStart,
   } = station;
 
-  var test = averageDistanceEnd || 0;
-  console.log(test);
   return (
     <div>
       <div>Station Information</div>
@@ -49,7 +46,3 @@ export const StationView = (props: TProps) => {
     </div>
   );
 };
-
-const Container = styled.div`
-  margin-top: 1rem;
-`;

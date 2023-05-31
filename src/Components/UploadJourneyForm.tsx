@@ -1,4 +1,4 @@
-import { Field, Form, Formik, useFormikContext } from "formik";
+import { Field, Form, Formik } from "formik";
 import { TJourneysWithTime, TPostJourneys, TStation } from "../types";
 import styled from "@emotion/styled";
 import { useJourneyMutation } from "../Hooks/useJourneyMutation";
@@ -8,8 +8,8 @@ import {
   Label,
   SubmitButton,
 } from "../StyledComponents";
+import { object, string, number, date } from "yup";
 
-type TValue = Record<string, number | string>;
 type TStationArray = Array<TStation>;
 
 interface TFormProps {
@@ -36,6 +36,18 @@ export const UploadJourneyForm = (props: TFormProps) => {
     returnStationId: 0,
     distance: 0,
   };
+
+  const journeyValidationSchema = object({
+    departureDate: date().required("Required"),
+    returnDate: date().required("Required"),
+    startTime: string().required("Required"),
+    endTime: string().required("Required"),
+    departureStationName: string(),
+    departureStationId: number(),
+    returnStationName: string(),
+    returnStationId: number(),
+    distance: number().min(10, "Too short distance").required("Required"),
+  });
 
   //TODO: Possibly better way to do this. Needs research!
   const calculateDuration = (value: TJourneysWithTime) => {
@@ -74,6 +86,7 @@ export const UploadJourneyForm = (props: TFormProps) => {
   return (
     <FormContainer>
       <Formik
+        validationSchema={journeyValidationSchema}
         initialValues={initialValues}
         onSubmit={async (values: TJourneysWithTime) => {
           calculateDuration(values);
@@ -88,23 +101,38 @@ export const UploadJourneyForm = (props: TFormProps) => {
           mutate(newData);
         }}
       >
-        {({ setFieldValue }) => (
+        {({ setFieldValue, touched, errors }) => (
           <StyledForm>
             <Fielddiv>
               <Label htmlFor="departureDate"> Departure Date </Label>
               <Field type="date" id="departureDate" name="departureDate" />
+              {errors.departureDate && touched.departureDate ? (
+                <div>{errors.departureDate}</div>
+              ) : null}
             </Fielddiv>
+
             <Fielddiv>
               <Label htmlFor="startTime">Start Time</Label>
               <Field type="time" id="startTime" name="startTime" />
+              {errors.startTime && touched.startTime ? (
+                <div>{errors.startTime}</div>
+              ) : null}
             </Fielddiv>
+
             <Fielddiv>
               <Label htmlFor="returnDate">Return Date</Label>
               <Field type="date" id="returnDate" name="returnDate" />
+              {errors.returnDate && touched.returnDate ? (
+                <div>{errors.returnDate}</div>
+              ) : null}
             </Fielddiv>
+
             <Fielddiv>
               <Label htmlFor="endTime">End Time</Label>
               <Field type="time" id="endTime" name="endTime" />
+              {errors.endTime && touched.endTime ? (
+                <div>{errors.endTime}</div>
+              ) : null}
             </Fielddiv>
 
             <Fielddiv>
@@ -126,6 +154,9 @@ export const UploadJourneyForm = (props: TFormProps) => {
                   return <option key={value.id}>{value.name}</option>;
                 })}
               </Field>
+              {errors.departureStationName && touched.departureStationName ? (
+                <div>{errors.departureStationName}</div>
+              ) : null}
             </Fielddiv>
 
             <Fielddiv>
@@ -147,12 +178,19 @@ export const UploadJourneyForm = (props: TFormProps) => {
                   return <option key={value.id}>{value.name}</option>;
                 })}
               </Field>
+              {errors.returnStationName && touched.returnStationName ? (
+                <div>{errors.returnStationName}</div>
+              ) : null}
             </Fielddiv>
 
             <Fielddiv>
               <Label htmlFor="distance">Distance in meters</Label>
               <Field id="distance" name="distance" placeholder="0" />
+              {errors.distance && touched.distance ? (
+                <div>{errors.distance}</div>
+              ) : null}
             </Fielddiv>
+
             <ButtonDiv>
               <CancelButton
                 onClick={() => setFormOpen(false)}

@@ -4,7 +4,6 @@ import { TStation, TStationWithNums } from "../types";
 import styled from "@emotion/styled";
 import { UploadStationForm } from "../Components/UploadStationForm";
 import {
-  ListItem,
   AddButton,
   ListContainer,
   ListHead,
@@ -12,12 +11,15 @@ import {
 } from "../StyledComponents";
 import { StationView } from "../Components/StationView";
 import { useJourneysQuery } from "../Hooks/useJourneysQuery";
+import { StationSearch } from "../Components/StationSearch";
 
 export const StationsView = () => {
   const [formOpen, setFormOpen] = useState(false);
   const [station, setStation] = useState<TStationWithNums | undefined>(
     undefined
   );
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data, isLoading, isError } = useStationsQuery();
   const {
@@ -35,8 +37,14 @@ export const StationsView = () => {
   }
 
   const stationOnClick = (id: number) => {
-    const station: TStation = data.find((station) => station.id === id);
+    setFormOpen(false);
+    const station: TStation | undefined = data.find(
+      (station) => station.id === id
+    );
 
+    if (!station) {
+      return;
+    }
     //Find journeys that start from and end to clicked station
     const departJourneys = journeys.filter(
       (journey) => journey.departureStationId === station.id
@@ -104,27 +112,24 @@ export const StationsView = () => {
           <div>Kapasiteet</div>
         </StyledListHead>
         <StyledListContainer>
-          {data.map((value) => {
-            return (
-              <StyledListItem
-                onClick={() => stationOnClick(value.id)}
-                key={value.id}
-              >
-                <div>{value.adress}</div>
-                <div>{value.osoite}</div>
-                <div>{value.name}</div>
-                <div>{value.namn}</div>
-                <div>{value.nimi}</div>
-                <div>{value.kapasiteet}</div>
-              </StyledListItem>
-            );
-          })}
+          <StationSearch
+            data={data}
+            searchQuery={searchQuery}
+            stationOnClick={stationOnClick}
+          />
         </StyledListContainer>
         <FormDiv>
           {formOpen ? (
             <UploadStationForm setFormOpen={setFormOpen} />
           ) : (
-            <AddButton children="Add new station" onClick={addButtonOnClick} />
+            <SearchDiv>
+              <AddButton
+                children="Add new station"
+                onClick={addButtonOnClick}
+                placeholder="Search"
+              />
+              <input onChange={(event) => setSearchQuery(event.target.value)} />
+            </SearchDiv>
           )}
         </FormDiv>
 
@@ -145,17 +150,13 @@ const StyledListHead = styled(ListHead)`
   }
 `;
 
-const StyledListItem = styled(ListItem)`
-  & > * {
-    width: 13rem;
-  }
-`;
-
 const FormDiv = styled.div`
   margin-top: 1rem;
   margin-left: 1rem;
 `;
 
-const StationDiv = styled.div`
-  margin-top: 1rem;
+const SearchDiv = styled.div`
+  & > * {
+    margin: 1rem;
+  }
 `;

@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { TStation } from "../types";
+import { stationUrl } from "../ApiUrls";
 
 const postStation = async (data: TStation) => {
   const response = await axios
-    .post("https://localhost:7076/api/Stations", data)
+    .post(stationUrl, data)
     .then((res) => res.data)
     .catch((err) => err);
 

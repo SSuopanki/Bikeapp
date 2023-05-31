@@ -1,13 +1,14 @@
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { TStations } from "../types";
+import { TStation } from "../types";
+import { stationUrl } from "../ApiUrls";
 
 export const useStationsQuery = () =>
-  useQuery<Array<TStations>>({
+  useQuery<Array<TStation>>({
     queryKey: ["stations"],
     queryFn: async () =>
       await axios
-        .get("https://localhost:7076/api/Stations")
+        .get(stationUrl)
         .then((res) => res.data)
         .catch((err) => err),
   });

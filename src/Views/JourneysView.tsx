@@ -1,15 +1,16 @@
 import styled from "@emotion/styled";
 import { UploadJourneyForm } from "../Components/UploadJourneyForm";
-import { useJourneysQuery } from "../Hooks/useJourneysQuery";
-import { useStationsQuery } from "../Hooks/useStationsQuery";
+import { useJourneysQuery, useStationsQuery } from "../Hooks";
 import { TJourney } from "../types";
 import { useState } from "react";
 import { JourneyView } from "../Components/JourneyView";
-import { Container } from "../StyledComponents/Container";
-import { ListContainer } from "../StyledComponents/ListContainer";
-import { ListItem } from "../StyledComponents/ListItem";
-import { ListHead } from "../StyledComponents/ListHead";
-import { AddButton } from "../StyledComponents/AddButton";
+import {
+  Container,
+  ListContainer,
+  ListItem,
+  ListHead,
+  AddButton,
+} from "../StyledComponents";
 
 export const JourneysView = () => {
   const [formOpen, setFormOpen] = useState(false);
